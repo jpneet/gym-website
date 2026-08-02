@@ -1,8 +1,5 @@
-import { useRef, useEffect, useCallback } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRef, useCallback } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const programs = [
   {
@@ -11,7 +8,7 @@ const programs = [
     desc: 'Build raw power with progressive overload programs designed by world-class coaches. Every rep. Every set. Perfected.',
     tag: '8–16 WEEKS',
     img: '/images/programs/strength.jpg',
-    alt: 'Strength training session at FORGE gym',
+    alt: 'Strength training',
   },
   {
     num: '02',
@@ -19,7 +16,7 @@ const programs = [
     desc: 'Science-backed metabolic conditioning that shreds fat while preserving hard-earned muscle. No crash diets.',
     tag: '6–12 WEEKS',
     img: '/images/programs/fat-loss.jpg',
-    alt: 'High-intensity fat loss training at FORGE',
+    alt: 'Fat Loss',
   },
   {
     num: '03',
@@ -27,7 +24,7 @@ const programs = [
     desc: 'Real-world athleticism. Train your body to move beautifully through all planes of motion.',
     tag: 'ONGOING',
     img: '/images/programs/functional.jpg',
-    alt: 'Functional fitness movements at FORGE',
+    alt: 'Functional Fitness',
   },
   {
     num: '04',
@@ -35,11 +32,10 @@ const programs = [
     desc: 'Sculpt a competition-ready physique with hypertrophy-focused periodization and precision nutrition.',
     tag: '16–24 WEEKS',
     img: '/images/programs/bodybuilding.jpg',
-    alt: 'Bodybuilding program at FORGE elite gym',
+    alt: 'Bodybuilding',
   },
 ];
 
-/** Attaches load→fade callback for lazy images */
 function useLazyImg() {
   return useCallback((el: HTMLImageElement | null) => {
     if (!el) return;
@@ -53,207 +49,106 @@ function useLazyImg() {
 }
 
 export function Programs() {
-  const sectionRef = useRef<HTMLElement>(null);
   const attachLazy = useLazyImg();
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
 
-  useEffect(() => {
-    const cards = sectionRef.current?.querySelectorAll('.prog-card');
-    if (!cards) return;
-
-    cards.forEach((card) => {
-      gsap.fromTo(
-        card,
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      // Parallax on the image inside each card
-      const img = card.querySelector('.prog-img-wrap img');
-      if (img) {
-        gsap.fromTo(
-          img,
-          { scale: 1.08 },
-          {
-            scale: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.5,
-            },
-          }
-        );
-      }
-    });
-
-    const header = sectionRef.current?.querySelector('.prog-header');
-    if (header) {
-      gsap.fromTo(
-        header.querySelectorAll('.reveal'),
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.1,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: header,
-            start: 'top 85%',
-          },
-        }
-      );
-    }
-  }, []);
+  const titleY = useTransform(scrollYProgress, [0, 1], [150, -150]);
 
   return (
     <section
-      ref={sectionRef}
+      ref={containerRef}
       id="programs"
-      className="section-pad"
-      style={{ background: 'var(--bg)' }}
+      className="spacing-section bg-bg-base relative overflow-hidden"
     >
-      <div className="container">
-        {/* Header */}
-        <div className="prog-header" style={{ marginBottom: 'clamp(3rem, 6vw, 6rem)' }}>
-          <span className="label reveal" style={{ display: 'block', marginBottom: '1rem' }}>
-            What We Offer
-          </span>
-          <h2
-            className="display-lg reveal"
-            style={{ maxWidth: '640px' }}
-          >
-            Programs built for{' '}
-            <span className="gradient-text">results.</span>
-          </h2>
-        </div>
+      {/* Ambient Blueprint Grid */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-20"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          maskImage: 'radial-gradient(ellipse at center, black 20%, transparent 70%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, black 20%, transparent 70%)'
+        }}
+      />
+      
+      {/* Ambient Orb */}
+      <div className="ambient-orb w-[600px] h-[600px] top-1/4 left-0 -translate-x-1/2" />
 
-        {/* Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5px',
-            background: 'var(--border)',
+      <div className="container relative z-10">
+        {/* Parallax Title */}
+        <motion.div 
+          style={{ 
+            y: titleY,
+            marginBottom: 'clamp(10rem, 15vw, 14rem)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            width: '100%'
           }}
+          className="relative z-30 mix-blend-difference"
         >
-          {programs.map((p) => (
-            <div
-              key={p.num}
-              className="prog-card"
-              style={{
-                background: 'var(--bg)',
-                cursor: 'pointer',
-                transition: 'background 0.35s ease',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--bg-surface)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--bg)';
-              }}
-            >
-              {/* Program Image */}
-              <div className="prog-img-wrap" style={{ height: '200px', position: 'relative' }}>
-                <img
-                  ref={attachLazy}
-                  src={p.img}
-                  alt={p.alt}
-                  loading="lazy"
-                  decoding="async"
-                  className="img-lazy"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-                {/* Gradient overlay — bottom fade into card bg */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background:
-                      'linear-gradient(to top, var(--bg) 0%, rgba(33,12,8,0.4) 60%, transparent 100%)',
-                    pointerEvents: 'none',
-                  }}
-                />
-                {/* Program number watermark */}
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '0.75rem',
-                    left: '1rem',
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
-                    fontWeight: 900,
-                    lineHeight: 1,
-                    color: 'rgba(255,255,255,0.12)',
-                    letterSpacing: '-0.04em',
-                    pointerEvents: 'none',
-                    userSelect: 'none',
-                  }}
-                >
-                  {p.num}
-                </span>
-              </div>
+          <span className="label block mb-4 tracking-editorial" style={{ wordBreak: 'break-word', maxWidth: '100%' }}>The Method</span>
+          <h2 
+            className="display-lg uppercase font-black tracking-tighter"
+            style={{
+              maxWidth: '100%',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+            }}
+          >
+            Programs built for <span className="clip-text-luxury">results.</span>
+          </h2>
+        </motion.div>
 
-              {/* Card body */}
-              <div style={{ padding: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    marginBottom: '1.25rem',
-                  }}
-                >
-                  <h3 className="heading-md">
-                    {p.title}
-                  </h3>
-                  <span className="label" style={{ marginTop: '0.25rem', flexShrink: 0 }}>
-                    {p.tag}
-                  </span>
+        {/* Asymmetrical List */}
+        <div className="flex flex-col gap-32 md:gap-48">
+          {programs.map((p, i) => {
+            const isEven = i % 2 !== 0;
+            return (
+              <motion.div
+                key={p.num}
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${isEven ? 'md:flex-row-reverse' : ''}`}
+              >
+                {/* Image Wrap */}
+                <div className="w-full md:w-1/2 relative">
+                  {/* Giant Overlap Number */}
+                  <div className="absolute -top-8 md:-top-16 -left-4 md:-left-12 z-20 text-huge font-black leading-none text-white mix-blend-overlay opacity-40 hover:opacity-80 transition-opacity duration-700 pointer-events-none" aria-hidden="true">
+                    {p.num}
+                  </div>
+                  
+                  <div className="relative aspect-[4/3] overflow-hidden group">
+                    <img
+                      ref={attachLazy}
+                      src={p.img}
+                      alt={p.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="img-lazy w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1500 ease-expo will-change-transform"
+                    />
+                  </div>
                 </div>
 
-                <p className="body-md" style={{ marginBottom: '1.75rem' }}>
-                  {p.desc}
-                </p>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.06em',
-                    color: 'var(--accent)',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Learn More
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                {/* Text Wrap */}
+                <div className="w-full md:w-1/2 flex flex-col justify-center">
+                  <span className="label mb-4 tracking-editorial">{p.tag}</span>
+                  <h3 className="display-md mb-6">{p.title}</h3>
+                  <p className="body-lg mb-8 max-w-md">{p.desc}</p>
+                  
+                  <button className="self-start text-sm font-bold tracking-widest uppercase hover-underline-anim">
+                    Explore Program
+                  </button>
                 </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

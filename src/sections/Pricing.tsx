@@ -1,14 +1,12 @@
-import { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const plans = [
   {
     tier: 'Starter',
     price: '49',
     period: '/mo',
+    desc: 'The essential foundation for your fitness journey.',
     features: [
       'Full gym access',
       '2 group classes / week',
@@ -16,13 +14,12 @@ const plans = [
       'Basic fitness assessment',
       'Mobile app access',
     ],
-    featured: false,
   },
   {
     tier: 'Pro',
     price: '99',
     period: '/mo',
-    badge: 'Most Popular',
+    desc: 'For the dedicated athlete demanding more.',
     features: [
       'Unlimited gym access',
       'Unlimited group classes',
@@ -31,12 +28,12 @@ const plans = [
       'Recovery zone access',
       'Progress tracking',
     ],
-    featured: true,
   },
   {
     tier: 'Elite',
     price: '199',
     period: '/mo',
+    desc: 'Uncompromised coaching and luxury amenities.',
     features: [
       'Everything in Pro',
       '3 PT sessions / week',
@@ -45,187 +42,113 @@ const plans = [
       'Priority booking',
       'Competition prep',
     ],
-    featured: false,
   },
 ];
 
 export function Pricing() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const cards = sectionRef.current?.querySelectorAll('.pricing-card');
-    cards?.forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          delay: i * 0.1,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
-        }
-      );
-    });
-
-    const header = sectionRef.current?.querySelector('.pricing-header');
-    if (header) {
-      gsap.fromTo(
-        header.querySelectorAll('.reveal'),
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: header, start: 'top 85%' } }
-      );
-    }
-  }, []);
+  const [activeTier, setActiveTier] = useState(0);
 
   return (
-    <section
-      ref={sectionRef}
-      id="pricing"
-      className="section-pad"
-      style={{ background: 'var(--bg-surface)', position: 'relative', overflow: 'hidden' }}
-    >
-      {/* Bg glow */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-200px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '800px',
-          height: '400px',
-          background: 'radial-gradient(ellipse, rgba(232,164,90,0.05) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div className="container">
-        <div
-          className="pricing-header"
-          style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 6vw, 5.5rem)' }}
-        >
-          <span className="label reveal" style={{ display: 'block', marginBottom: '1rem' }}>
-            Invest In Yourself
-          </span>
-          <h2 className="display-lg reveal" style={{ marginBottom: '1.25rem' }}>
-            Choose your <span className="gradient-text">level.</span>
+    <section id="pricing" className="spacing-section bg-bg-base relative overflow-hidden">
+      <div className="container relative z-10 flex flex-col-reverse lg:flex-row gap-16 lg:gap-24">
+        
+        {/* Left Column - Tiers */}
+        <div className="w-full lg:w-1/2 flex flex-col">
+          <span className="label block mb-6 tracking-editorial">Engagement Models</span>
+          <h2 className="display-lg uppercase font-black tracking-tighter mb-16 leading-[1.1]">
+            Commit to <span className="clip-text-luxury">Greatness.</span>
           </h2>
-          <p className="body-lg reveal" style={{ maxWidth: '480px', margin: '0 auto' }}>
-            Every tier is designed to deliver real, measurable results. No fluff.
-          </p>
+
+          <div className="flex flex-col border-t border-white/10" role="tablist" aria-label="Pricing Tiers">
+            {plans.map((plan, idx) => {
+              const isActive = activeTier === idx;
+              return (
+                <div 
+                  key={plan.tier}
+                  className="border-b border-white/10 py-6 md:py-8 cursor-pointer"
+                  onClick={() => setActiveTier(idx)}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`tier-content-${idx}`}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveTier(idx); } }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className={`text-3xl md:text-5xl font-black uppercase transition-colors duration-500 ${isActive ? 'text-white' : 'text-white/30 hover:text-white/60'}`}>
+                      {plan.tier}
+                    </h3>
+                    <div className="text-xl md:text-2xl font-bold text-accent">
+                      ${plan.price}
+                    </div>
+                  </div>
+                  
+                  {/* Accordion Feature List */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                        id={`tier-content-${idx}`}
+                        role="tabpanel"
+                      >
+                        <p className="body-md mb-6">{plan.desc}</p>
+                        <ul className="flex flex-col gap-3 mb-4">
+                          {plan.features.map(f => (
+                            <li key={f} className="flex items-center gap-3 text-sm text-text-muted">
+                              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem',
-            alignItems: 'start',
-          }}
-        >
-          {plans.map((plan) => (
-            <div
-              key={plan.tier}
-              className="pricing-card"
-              style={{
-                position: 'relative',
-                padding: 'clamp(2rem, 3.5vw, 3rem)',
-                background: plan.featured ? 'rgba(232,164,90,0.06)' : 'var(--bg-card)',
-                border: `1px solid ${plan.featured ? 'rgba(232,164,90,0.3)' : 'var(--border)'}`,
-                borderRadius: '2px',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: plan.featured
-                  ? '0 0 60px rgba(232,164,90,0.1), 0 0 0 0 rgba(232,164,90,0)'
-                  : 'none',
-                transition: 'transform 0.35s var(--ease-expo), box-shadow 0.35s ease',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px)';
-                if (plan.featured) {
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    '0 0 80px rgba(232,164,90,0.2), 0 20px 60px rgba(0,0,0,0.4)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                if (plan.featured) {
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    '0 0 60px rgba(232,164,90,0.1)';
-                }
-              }}
-            >
-              {plan.badge && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '-1px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-                    color: '#1a0804',
-                    fontSize: '0.65rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    padding: '0.3rem 1rem',
-                    borderRadius: '0 0 4px 4px',
-                  }}
+        {/* Right Column - Sticky Glass Card */}
+        <div className="w-full lg:w-1/2 relative">
+          <div className="sticky top-40 w-full aspect-[4/5] md:aspect-square group flex items-center justify-center">
+            
+            {/* Absolute Ambient Orb */}
+            <div className="ambient-orb inset-0 scale-100 group-hover:scale-150 transition-transform duration-1500 ease-expo" />
+            
+            <div className="relative z-10 glass w-full max-w-md h-full rounded-2xl border border-white/10 flex flex-col items-center justify-center p-12 text-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTier}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+                  className="flex flex-col items-center w-full"
                 >
-                  {plan.badge}
-                </div>
-              )}
-
-              <div style={{ marginBottom: '2rem', paddingTop: plan.badge ? '1rem' : 0 }}>
-                <div
-                  className="label"
-                  style={{ marginBottom: '1rem', color: plan.featured ? 'var(--accent)' : 'var(--text-muted)' }}
-                >
-                  {plan.tier}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
-                  <span
-                    className="display-md"
-                    style={{ lineHeight: 1 }}
-                  >
-                    ${plan.price}
-                  </span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{plan.period}</span>
-                </div>
-              </div>
-
-              <ul style={{ marginBottom: '2.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {plan.features.map((f) => (
-                  <li
-                    key={f}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem',
-                      fontSize: '0.875rem',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                      <circle cx="8" cy="8" r="7" stroke={plan.featured ? 'var(--accent)' : 'var(--border-hover)'} strokeWidth="1.5" />
-                      <path d="M5 8l2 2 4-4" stroke={plan.featured ? 'var(--accent)' : 'var(--border-hover)'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href="#contact"
-                className={`btn-magnetic ${plan.featured ? 'btn-primary' : 'btn-outline'}`}
-                style={{ display: 'block', textAlign: 'center', width: '100%' }}
-              >
-                Get Started
-              </a>
+                  <span className="label tracking-editorial mb-4 text-accent">{plans[activeTier].tier}</span>
+                  <div className="flex items-baseline gap-2 mb-6">
+                    <span className="text-8xl font-black tracking-tighter text-white">
+                      ${plans[activeTier].price}
+                    </span>
+                    <span className="text-text-muted tracking-widest">{plans[activeTier].period}</span>
+                  </div>
+                  <p className="body-md text-text-muted mb-12">
+                    {plans[activeTier].desc}
+                  </p>
+                  
+                  <button className="w-full py-4 rounded-full bg-white text-black font-bold tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-300">
+                    Select Tier
+                  </button>
+                </motion.div>
+              </AnimatePresence>
             </div>
-          ))}
+          </div>
         </div>
+        
       </div>
     </section>
   );

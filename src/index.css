@@ -1,5 +1,5 @@
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700,900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
@@ -146,6 +146,7 @@ body::before {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 /* ── Magnetic button ── */
@@ -294,4 +295,47 @@ img { max-width: 100%; display: block; }
 .hover-underline-anim:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/* ── Custom Utilities for Redesign ── */
+.bg-bg-base { background: var(--bg); }
+.spacing-section { padding-block: clamp(120px, 15vw, 240px); }
+
+.ease-expo { transition-timing-function: var(--ease-expo); }
+.duration-1500 { transition-duration: 1.5s; }
+.tracking-editorial { letter-spacing: 0.25em; text-transform: uppercase; }
+.text-huge { font-size: clamp(6rem, 15vw, 12rem); line-height: 1; }
+
+.clip-text-luxury {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(232, 164, 90, 0.4);
+}
+
+@keyframes breathe {
+  0% { transform: scale(1) translate(-50%, -50%); opacity: 0.5; }
+  50% { transform: scale(1.1) translate(-45%, -45%); opacity: 0.8; }
+  100% { transform: scale(1) translate(-50%, -50%); opacity: 0.5; }
+}
+
+.animate-breathe {
+  animation: breathe 8s ease-in-out infinite;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(232,164,90,0.08) 0%, transparent 60%);
+  transform: translateZ(0); /* Hardware acceleration */
+  will-change: transform, opacity;
 }

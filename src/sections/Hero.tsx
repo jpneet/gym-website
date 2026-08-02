@@ -136,41 +136,47 @@ export function Hero() {
               ref={headlineRef}
               className="display-xl"
               style={{
-                marginBottom: '1.75rem',
-                overflow: 'hidden',
+                fontSize: 'clamp(3.5rem, 10vw, 118.3px)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                rowGap: '0.15em',
+                marginBottom: 'clamp(1.5rem, 4vw, 3rem)',
+                position: 'relative',
+                zIndex: 20,
               }}
               aria-label={headline}
             >
-              {words.map((word, wi) => (
-                <span
-                  key={wi}
-                  style={{ display: 'inline-block', overflow: 'hidden', paddingBottom: '0.08em' }}
-                >
-                  {word.split('').map((ch, ci) => (
-                    <span
-                      key={ci}
-                      className="char"
-                      style={{
-                        display: 'inline-block',
-                        opacity: 0,
-                        color: wi === 1
-                          ? 'transparent'
-                          : 'var(--text)',
-                        background: wi === 1
-                          ? 'linear-gradient(135deg, var(--accent), var(--accent-2))'
-                          : 'none',
-                        WebkitBackgroundClip: wi === 1 ? 'text' : 'unset',
-                        WebkitTextFillColor: wi === 1 ? 'transparent' : 'unset',
-                        backgroundClip: wi === 1 ? 'text' : 'unset',
-                      }}
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                  {wi < words.length - 1 && (
-                    <span style={{ display: 'inline-block', width: '0.25em' }} />
-                  )}
-                </span>
+              {[[0, 1], [2], [3]].map((group, gi) => (
+                <div key={gi} style={{ display: 'flex', flexWrap: 'wrap', columnGap: '0.2em' }}>
+                  {group.map(wi => {
+                    const word = words[wi];
+                    return (
+                      <span
+                        key={wi}
+                        style={{ display: 'inline-flex', overflow: 'hidden', paddingBottom: '0.1em' }}
+                      >
+                        {word.split('').map((ch, ci) => (
+                          <span
+                            key={ci}
+                            className="char"
+                            style={{
+                              display: 'inline-block',
+                              opacity: 0,
+                              color: wi === 1 ? 'transparent' : 'var(--text)',
+                              background: wi === 1 ? 'linear-gradient(135deg, var(--accent), var(--accent-2))' : 'none',
+                              WebkitBackgroundClip: wi === 1 ? 'text' : 'unset',
+                              WebkitTextFillColor: wi === 1 ? 'transparent' : 'unset',
+                              backgroundClip: wi === 1 ? 'text' : 'unset',
+                            }}
+                          >
+                            {ch}
+                          </span>
+                        ))}
+                      </span>
+                    );
+                  })}
+                </div>
               ))}
             </h1>
 

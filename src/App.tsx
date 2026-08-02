@@ -8,6 +8,7 @@ import { Programs } from './sections/Programs';
 import { WhyForge } from './sections/WhyForge';
 import { Trainers } from './sections/Trainers';
 import { Pricing } from './sections/Pricing';
+import { Gallery } from './sections/Gallery';
 import { Testimonials } from './sections/Testimonials';
 import { CTA } from './sections/CTA';
 
@@ -22,6 +23,7 @@ function AppContent() {
         <Programs />
         <WhyForge />
         <Trainers />
+        <Gallery />
         <Pricing />
         <Testimonials />
         <CTA />

@@ -8,56 +8,27 @@ export function Footer() {
   return (
     <footer
       id="footer"
-      style={{
-        background: '#050505',
-        borderTop: '1px solid var(--border)',
-        padding: 'clamp(3rem, 7vw, 6rem) 0 2rem',
-      }}
+      className="bg-[#050505] border-t border-white/5 pt-16 md:pt-32 pb-8"
     >
       <div className="container">
         {/* Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1fr',
-            gap: 'clamp(2rem, 4vw, 4rem)',
-            marginBottom: 'clamp(2.5rem, 4vw, 4rem)',
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 md:gap-8 mb-16 md:mb-24">
+          
           {/* Brand */}
-          <div>
+          <div className="lg:col-span-2">
             <a
               href="#"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.6rem',
-                fontWeight: 900,
-                letterSpacing: '0.2em',
-                display: 'inline-block',
-                marginBottom: '1.25rem',
-                background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="font-display text-3xl font-black tracking-editorial inline-block mb-6 bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent"
             >
               FORGE
             </a>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'var(--text-muted)',
-                lineHeight: 1.7,
-                maxWidth: '280px',
-                marginBottom: '1.75rem',
-              }}
-            >
+            <p className="text-sm text-text-muted leading-relaxed max-w-xs mb-8">
               Elite fitness for those who refuse to settle. Transform your body,
               transform your life.
             </p>
 
             {/* Socials */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div className="flex gap-3">
               {[
                 { label: 'Instagram', path: 'M2 2h20v20H2V2zm10 5a5 5 0 110 10A5 5 0 0112 7zm6.5-2a1.5 1.5 0 100 3 1.5 1.5 0 000-3z' },
                 { label: 'Twitter', path: 'M4 4l6.5 8L4 20h2l5.5-6.8L16 20h4l-6.8-8.5L20 4h-2l-5.2 6.3L9 4H4z' },
@@ -67,25 +38,7 @@ export function Footer() {
                   key={s.label}
                   href="#"
                   aria-label={s.label}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    border: '1px solid var(--border)',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--text-muted)',
-                    transition: 'all 0.3s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--accent)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
-                  }}
+                  className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-text-muted hover:border-accent hover:text-accent transition-all duration-300"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path d={s.path} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -98,25 +51,18 @@ export function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([heading, links]) => (
             <div key={heading}>
-              <h4 className="label" style={{ marginBottom: '1.25rem' }}>
-                {heading}
-              </h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+              <h4 className="label mb-6 tracking-editorial">{heading}</h4>
+              <ul className="flex flex-col gap-4">
                 {links.map((link) => (
                   <li key={link}>
                     <a
                       href="#"
-                      className="hover-underline-anim"
-                      style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--text-muted)',
-                        transition: 'color 0.25s ease',
-                        paddingBottom: '2px',
-                      }}
-                      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--text)')}
-                      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--text-muted)')}
+                      className="group flex items-center transition-all duration-300"
                     >
-                      {link}
+                      <span className="w-0 h-[1px] bg-accent group-hover:w-4 transition-all duration-300 ease-out" />
+                      <span className="text-sm text-text-muted group-hover:text-white transition-colors duration-300 transform group-hover:translate-x-2">
+                        {link}
+                      </span>
                     </a>
                   </li>
                 ))}
@@ -126,44 +72,15 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div
-          style={{
-            paddingTop: '2rem',
-            borderTop: '1px solid var(--border)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem',
-          }}
-        >
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-text-muted">
             © 2026 FORGE Fitness. All rights reserved.
           </p>
-          <p
-            style={{
-              fontSize: '0.72rem',
-              color: 'rgba(255,255,255,0.15)',
-              letterSpacing: '0.1em',
-            }}
-          >
+          <p className="text-[10px] text-white/20 tracking-editorial font-bold">
             BUILT WITH INTENTION
           </p>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          footer .container > div:first-child {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-        @media (max-width: 480px) {
-          footer .container > div:first-child {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </footer>
   );
 }
