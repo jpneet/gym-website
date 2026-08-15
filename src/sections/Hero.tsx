@@ -9,9 +9,7 @@ export function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLSpanElement>(null);
   const scrollHintRef = useRef<HTMLDivElement>(null);
-  const parallaxRef = useRef<HTMLDivElement>(null);
 
   // Frame sequence (canvas animation)
   useFrameSequence(
@@ -24,12 +22,10 @@ export function Hero() {
     const chars = headlineRef.current?.querySelectorAll('.char') ?? [];
     const tl = gsap.timeline({ delay: 1.5 });
 
-    tl.fromTo(labelRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out' })
-      .fromTo(
+    tl.fromTo(
         chars,
         { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.04, ease: 'expo.out' },
-        '-=0.3'
+        { y: 0, opacity: 1, duration: 1, stagger: 0.04, ease: 'expo.out' }
       )
       .fromTo(subtitleRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out' }, '-=0.5')
       .fromTo(ctaRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out' }, '-=0.4')
@@ -38,21 +34,6 @@ export function Hero() {
     return () => { tl.kill(); };
   }, []);
 
-  // Mouse parallax
-  useEffect(() => {
-    const onMouse = (e: MouseEvent) => {
-      const xPct = (e.clientX / window.innerWidth - 0.5) * 2;
-      const yPct = (e.clientY / window.innerHeight - 0.5) * 2;
-      gsap.to(parallaxRef.current, {
-        x: xPct * 18,
-        y: yPct * 10,
-        duration: 1.2,
-        ease: 'power2.out',
-      });
-    };
-    window.addEventListener('mousemove', onMouse, { passive: true });
-    return () => window.removeEventListener('mousemove', onMouse);
-  }, []);
 
   const headline = 'BUILD YOUR STRONGEST SELF';
   const words = headline.split(' ');
@@ -110,33 +91,26 @@ export function Hero() {
 
           {/* Hero Content */}
           <div
-            ref={parallaxRef}
             style={{
               position: 'absolute',
               inset: 0,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               padding: 'clamp(1.5rem, 5vw, 4rem)',
+              paddingTop: 'clamp(120px, 15vh, 160px)',
               paddingBottom: 'clamp(4rem, 8vw, 7rem)',
               maxWidth: '820px',
             }}
           >
-            {/* Label */}
-            <span
-              ref={labelRef}
-              className="label"
-              style={{ marginBottom: '1.25rem', opacity: 0 }}
-            >
-              Elite Fitness Club · Est. 2016
-            </span>
-
             {/* Headline */}
             <h1
               ref={headlineRef}
               className="display-xl"
               style={{
-                fontSize: 'clamp(3.5rem, 10vw, 118.3px)',
+                fontSize: 'clamp(2.7rem, 6vw, 76px)',
+                lineHeight: 0.88,
+                letterSpacing: '-0.045em',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',

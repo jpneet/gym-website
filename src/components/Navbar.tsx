@@ -19,7 +19,8 @@ export function Navbar() {
   // Navbar scroll state
   useEffect(() => {
     const st = ScrollTrigger.create({
-      start: 'top -80px',
+      trigger: '#hero',
+      start: 'bottom 100px',
       onEnter: () => setScrolled(true),
       onLeaveBack: () => setScrolled(false),
     });
