@@ -18,7 +18,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <a
               href="#"
-              className="font-display text-3xl font-black tracking-editorial inline-block mb-6 bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent"
+              className="font-display text-3xl font-black tracking-editorial inline-block mb-6 bg-linear-to-br from-accent to-accent-2 bg-clip-text text-transparent"
             >
               FORGE
             </a>
@@ -59,7 +59,7 @@ export function Footer() {
                       href="#"
                       className="group flex items-center transition-all duration-300"
                     >
-                      <span className="w-0 h-[1px] bg-accent group-hover:w-4 transition-all duration-300 ease-out" />
+                      <span className="w-0 h-1px bg-accent group-hover:w-4 transition-all duration-300 ease-out" />
                       <span className="text-sm text-text-muted group-hover:text-white transition-colors duration-300 transform group-hover:translate-x-2">
                         {link}
                       </span>
@@ -75,9 +75,6 @@ export function Footer() {
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-text-muted">
             © 2026 FORGE Fitness. All rights reserved.
-          </p>
-          <p className="text-[10px] text-white/20 tracking-editorial font-bold">
-            BUILT WITH INTENTION
           </p>
         </div>
       </div>
