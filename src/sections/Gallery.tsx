@@ -36,10 +36,10 @@ const galleryItems = [
 
 export function Gallery() {
   const targetRef = useRef<HTMLDivElement>(null);
-  
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollRange, setScrollRange] = useState(0);
-  
+
   const { scrollYProgress } = useScroll({
     target: targetRef,
   });
@@ -60,7 +60,7 @@ export function Gallery() {
   return (
     <section ref={targetRef} id="gallery" className="relative h-[350vh] bg-bg-surface">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        
+
         <div className="absolute top-[10%] left-6 md:left-12 z-20">
           <span className="label block mb-2 tracking-editorial">The Exhibition</span>
           <h2 className="display-md text-white font-black tracking-tighter">
@@ -70,24 +70,29 @@ export function Gallery() {
 
         <motion.div ref={scrollRef} style={{ x }} className="flex gap-16 px-[5vw] md:px-[10vw]">
           {galleryItems.map((item) => (
-            <div 
-              key={item.id} 
-              className="relative w-[85vw] md:w-[35vw] aspect-[3/4] glass rounded-sm overflow-hidden flex-shrink-0 group cursor-pointer"
+            <div
+              key={item.id}
+              className="relative w-[85vw] md:w-[35vw] aspect-3/4 glass rounded-sm overflow-hidden shrink-0 group cursor-pointer"
             >
               {/* Image */}
-              <img 
-                src={item.img} 
-                alt={item.title} 
+              <img
+                src={item.img}
+                alt={item.title}
                 className="absolute inset-0 w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1500 ease-expo"
               />
-              
+
               {/* Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
-              
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+
               {/* Text */}
-              <div className="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-expo pointer-events-none">
-                <span className="label text-accent tracking-[0.2em] block mb-2">{item.subtitle}</span>
-                <h3 className="heading-lg text-white font-bold">{item.title}</h3>
+                <div className="absolute bottom-0 left-0 w-full p-8 translate-x-4 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-10 transition-transform duration-700 ease-expo pointer-events-none">
+                <span className="label text-accent tracking-[0.2em] block mb-2">
+                  {item.subtitle}
+                </span>
+
+                <h3 className="heading-lg text-white font-bold">
+                  {item.title}
+                </h3>
               </div>
             </div>
           ))}
